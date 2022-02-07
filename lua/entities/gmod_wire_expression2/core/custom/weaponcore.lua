@@ -1,4 +1,5 @@
 E2Lib.RegisterExtension("weaponcore", false)
+local IsValid = IsValid
 
 local function ValidPly( ply )
 	if not ply or not ply:IsValid() or not ply:IsPlayer() then
@@ -156,16 +157,26 @@ registerCallback("destruct",function(self)
 		registered_e2s_switch[self.entity] = nil
 end)
 
-hook.Add("PlayerSwitchWeapon","Expresion2PlayerSwitchWeapon", function(ply, oldWeapon, newWeapon)
-	for ent,_ in pairs(registered_e2s_switch) do
-		weaponPly = ply
-		weaponOld = oldWeapon
-		weaponNext = newWeapon
+hook.Add("PlayerSwitchWeapon","WeaponCore_PlayerSwitchWeapon", function(ply, oldWeapon, newWeapon)
+    local invalid = {}
 
-		weaponswitchclk = 1
-		ent:Execute()
-		weaponswitchclk = 0
+	for ent,_ in pairs(registered_e2s_switch) do
+	    if not IsValid( ent ) then
+            invalid[ent] = true
+        else
+            weaponPly = ply
+            weaponOld = oldWeapon
+            weaponNext = newWeapon
+
+            weaponswitchclk = 1
+            ent:Execute()
+            weaponswitchclk = 0
+        end
 	end
+
+	for ent in pairs( invalid ) do
+	    registered_e2s_switch[ent] = nil
+    end
 end)
  
 e2function void runOnWeaponSwitch(activate)
@@ -202,7 +213,7 @@ registerCallback("destruct",function(self)
 		registered_e2s_equip[self.entity] = nil
 end)
 
-hook.Add("WeaponEquip","Expresion2WeaponEquip", function(weapon)
+hook.Add("WeaponEquip","WeaponCore_WeaponEquip", function(weapon)
 	timer.Simple(0, function()
 		for ent,_ in pairs(registered_e2s_equip) do
 			weaponEquiped = weapon
