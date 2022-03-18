@@ -163,7 +163,11 @@ hook.Add("PlayerSwitchWeapon","Expresion2PlayerSwitchWeapon", function(ply, oldW
 		weaponNext = newWeapon
 
 		weaponswitchclk = 1
-		ent:Execute()
+        if IsValid( ent ) then
+            ent:Execute()
+        else
+            registered_e2s_switch[ent] = nil
+        end
 		weaponswitchclk = 0
 	end
 end)
@@ -208,7 +212,11 @@ hook.Add("WeaponEquip","Expresion2WeaponEquip", function(weapon)
 			weaponEquiped = weapon
 
 			weaponequipclk = 1
-			ent:Execute()
+            if IsValid( ent ) then
+			    ent:Execute()
+            else
+                registered_e2s_equip[ent] = nil
+            end
 			weaponequipclk = 0
 		end
 	end)
