@@ -157,19 +157,18 @@ registerCallback("destruct",function(self)
 end)
 
 hook.Add("PlayerSwitchWeapon","Expresion2PlayerSwitchWeapon", function(ply, oldWeapon, newWeapon)
+    weaponPly = ply
+    weaponOld = oldWeapon
+    weaponNext = newWeapon
+    weaponswitchclk = 1
     for ent,_ in pairs(registered_e2s_switch) do
-        weaponPly = ply
-        weaponOld = oldWeapon
-        weaponNext = newWeapon
-
-        weaponswitchclk = 1
         if IsValid( ent ) then
             ent:Execute()
         else
             registered_e2s_switch[ent] = nil
         end
-        weaponswitchclk = 0
     end
+    weaponswitchclk = 0
 end)
 
 e2function void runOnWeaponSwitch(activate)
@@ -208,17 +207,16 @@ end)
 
 hook.Add("WeaponEquip","Expresion2WeaponEquip", function(weapon)
     timer.Simple(0, function()
+        weaponEquiped = weapon
+        weaponequipclk = 1
         for ent,_ in pairs(registered_e2s_equip) do
-            weaponEquiped = weapon
-
-            weaponequipclk = 1
             if IsValid( ent ) then
                 ent:Execute()
             else
                 registered_e2s_equip[ent] = nil
             end
-            weaponequipclk = 0
         end
+        weaponequipclk = 0
     end)
 end)
 
